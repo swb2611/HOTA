@@ -1,0 +1,56 @@
+
+CNCCHANNEL机台相关
+CncChannel/ActMainProgramStatus：控制器状态 ns=1;s=CNCInterface/CncChannelList0/CncChannel1/ActProgramStatus0
+CncChannel/ActMainProgramName：当前主加工程式名称 ns=1;s=CNCInterface/CncChannelList0/CncChannel1/ActProgramName0
+CncChannel/TotalPartCount：加工总工件数 ns=1;s=CNCInterface/CncChannelList0/CncChannel1/TotalPartCount0
+CncChannel/CmdFeedrate：进给倍率改变命令 ns=1;s=CNCInterface/CncChannelList0/CncChannel1/CmdFeedrate0
+CncChannel/ActOverride：系统当前的进给速度 ns=1;s=CNCInterface/CncChannelList0/CncChannel1/ActOverride0
+CncChannel/ActFeedrate：系统实际的进给倍率 ns=1;s=CNCInterface/CncChannelList0/CncChannel1/ActFeedrate0
+CncChannel/ToolId：系统主轴刀号
+CncChannel/ActMainProgramFile：读取主程序路径
+CncChannel/ActMainProgramFileOffset：主程序正在执行的行数
+CncChannel/ActMainProgramLine：主程序正在执行的N值
+CncChannel/ActModalOffsetFunction：目前工件坐标号码
+CncChannel/BlockMode：是否在单节停止模式
+CncChannel/CmdOverride：命令进给百分比
+CncChannel/DryRunFeed：空跑进给量
+CncChannel/FeedHold：是否加工暂停
+CncChannel/ActProgramName：目前执行程序名称
+CncChannel/Id：轴群号码
+CncChannel/ActJogIncrement：吋动倍率
+CncChannel/ActMFunctions：正在执行的M Code 号码
+CncChannel/ActOperationMode：控制器模式
+CncChannel/ActGFunctions：正在执行的G Code号码
+
+CNCSpindle主轴相关
+CncSpindle/ActSpeed：系统实际的主轴转速
+CncSpindle/CmdSpeed：主轴转速改变命令
+CncSpindle/ActLoad：系统主轴负载率
+CncSpindle/ActChannel：主轴驱动器站号/局号
+CncSpindle/ActTorque：主轴实际输出扭矩
+CncSpindle/CmdTorque：主轴扭矩命令
+CncSpindle/IsInactive：主轴是否无使能
+CncSpindle/IsVirtual：轴向是否为虚拟轴
+CncSpindle/ActGear：主轴目前齿轮档位
+CncSpindle/ActOverride：实际转速百分比
+CncSpindle/CmdGear：主轴齿轮档位命令
+CncSpindle/CmdOverride：命令转速百分比
+
+其他类别
+CNCInterface/PowerOnSpan：控制器开机时间
+CncInterface/CurrentAlarm：系统警报展示  ns=1;s=CNCInterface/CurrentAlarm0
+CNCInterface/CurrentAlarmList0：现有警报列表
+CNCInterface/RRegisterValues：读取对应R值内容
+CNCInterface/CncAxisList/CncAxis/ActLoad：轴向实际负载量
+CNCInterface/CncAxisList/CncAxis/ActTorque：轴向实际输出扭矩
+CNCInterface/CncAxisList/CncAxis/CmdTorque：轴向扭矩命令
+CNCInterface/CncAxisList/CncAxis/IsInactive：轴向是否无使能
+CNCInterface/CncAxisList/CncAxis/IsVirtual：轴向是否为虚拟轴
+CNCInterface/CncAxisList/CncAxis/IsReferenced：是否寻过原点
+CNCInterface/CncAxisList/CncAxis/IsRotational：是否为旋转轴
+CNCInterface/CncAxisList/CncAxis/ZeroOffset：原点偏离量
+CNCInterface/CncAxisList/CncAxis/PosDirect：内回授坐标
+CNCInterface/CncAxisList/CncAxis/PosInDirect：外回授坐标
+CNCInterface/CncTypeName：控制器机型
+CNCInterface/VendorRevision：软件版本号
+CNCInterface/VendorName：厂商名称
