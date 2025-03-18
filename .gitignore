@@ -14,6 +14,16 @@ frontend/.env.development.local
 frontend/.env.test.local
 frontend/.env.production.local
 
-
+# Byte-compiled / optimized / DLL files
 wenbo/lib
 .DS_Store
+__pycache__
+*.py[co]
+*.pyc[co]
+__pycache__/
+*.py[cod]
+
+# Byte-compiled / optimized / DLL files
+hota/api/__pycache__
+hota/api/migrations/__pycache__
+hota/hota/__pycache__/
