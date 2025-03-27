@@ -18,12 +18,11 @@ import {
     StockOutlined,
     WarningOutlined,
     SwapOutlined,
-    SettingOutlined,
     EllipsisOutlined,
 } from "@ant-design/icons";
 import {Col, Row, Statistic} from "antd";
 
-const Links = () => {
+const L2Links = () => {
     const [loading, setLoading] = useState(true);
     const [mstatus, setMstatus] = useState([]);
     const [mstatuscount, setMstatuscount] = useState([0, 0, 0, 0]);
@@ -32,68 +31,70 @@ const Links = () => {
     const working = "运行中";
     const notWorking = "未在运行";
     const mCodeMapToName = {
-        17: "HT-3006双主轴",
-        18: "HT-3007车床",
-        19: "HT-3008车床",
-        20: "HT-3009车床",
-        21: "HT-3010车床",
-        22: "HT-3011车床",
-        23: "HT-3012双主轴",
-        24: "HT-3013车床",
-        25: "HT-3014车床",
-        26: "HT-3015车床",
-        27: "HT-3016车床",
-        28: "HT-3017车床",
+        65: "HT-065机床",
+        66: "HT-066机床",
+        67: "HT-067机床",
+        68: "HT-068机床",
+        69: "HT-069机床",
+        70: "HT-070机床",
+        71: "HT-071机床",
+        72: "HT-072机床",
+        73: "HT-073机床",
+        74: "HT-074圆锯机",
+        75: "HT-075圆锯机",
+        76: "HT-076圆锯机",
     };
+    // const num = Object.keys(mCodeMapToName).length
+    let linearState;
 
     // useEffect(() => {
-    //   const getData = async () => {
-    //     setLoading(true);
-    //     var fetchedData = [];
-    //     try {
-    //       fetchedData = await axios
-    //         .get(`http://127.0.0.1:8000/api/machine-status/`)
-    //         .then((res) => {
-    //           setMstatus(res.data);
-    //           console.log(res.data);
+    //     const getData = async () => {
+    //         setLoading(true);
+    //         var fetchedData = [];
+    //         try {
+    //             fetchedData = await axios
+    //                 .get(`http://127.0.0.1:8000/api/l2-machine-status/`)
+    //                 .then((res) => {
+    //                     setMstatus(res.data);
+    //                     console.log(res.data);
     //
-    //           var jianceshebei = 0;
-    //           var shebeilianjie = 0;
-    //           var kaijiyunxing = 0;
-    //           var guzhangbaojing = 0;
+    //                     let jianceshebei = 0;
+    //                     let shebeilianjie = 0;
+    //                     let kaijiyunxing = 0;
+    //                     let guzhangbaojing = 0;
     //
-    //           res.data.map((key) => {
-    //             if (key[2] === connectionFail) {
-    //               jianceshebei = jianceshebei + 1;
-    //             }
-    //             if (key[2] === working) {
-    //               jianceshebei = jianceshebei + 1;
-    //               shebeilianjie = shebeilianjie + 1;
-    //               kaijiyunxing = kaijiyunxing + 1;
-    //             }
-    //             if (key[2] === notWorking) {
-    //               jianceshebei = jianceshebei + 1;
-    //               shebeilianjie = shebeilianjie + 1;
-    //               guzhangbaojing = guzhangbaojing + 1;
-    //             }
-    //             setMstatuscount([
-    //               jianceshebei,
-    //               shebeilianjie,
-    //               kaijiyunxing,
-    //               guzhangbaojing,
-    //             ]);
-    //             return null;
-    //           });
-    //         });
-    //     } catch (error) {
-    //       //error handler
-    //     } finally {
-    //       setLoading(false);
-    //     }
-    //     return await fetchedData;
-    //   };
+    //                     res.data.map((key) => {
+    //                         if (key[2] === connectionFail) {
+    //                             jianceshebei = jianceshebei + 1;
+    //                         }
+    //                         if (key[2] === working) {
+    //                             jianceshebei = jianceshebei + 1;
+    //                             shebeilianjie = shebeilianjie + 1;
+    //                             kaijiyunxing = kaijiyunxing + 1;
+    //                         }
+    //                         if (key[2] === notWorking) {
+    //                             jianceshebei = jianceshebei + 1;
+    //                             shebeilianjie = shebeilianjie + 1;
+    //                             guzhangbaojing = guzhangbaojing + 1;
+    //                         }
+    //                         setMstatuscount([
+    //                             jianceshebei,
+    //                             shebeilianjie,
+    //                             kaijiyunxing,
+    //                             guzhangbaojing,
+    //                         ]);
+    //                         return null;
+    //                     });
+    //                 });
+    //         } catch (error) {
+    //             //error handler
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //         return fetchedData;
+    //     };
     //
-    //   getData();
+    //     getData();
     // }, []);
 
     useEffect(() => {
@@ -218,11 +219,16 @@ const Links = () => {
         width: "180px",
     };
 
+    if (mstatuscount[3] === num) {
+        linearState = "停用"
+    } else {
+        linearState = "启用"
+    }
     const descriptionItems = [
         {
             key: "1",
             label: "线体名称",
-            children: "宝鸡车床线A1A2",
+            children: "宝鸡车床线B1B2",
         },
         {
             key: "2",
@@ -242,19 +248,18 @@ const Links = () => {
         {
             key: "5",
             label: "设备地址",
-            children: "和泰机电益农厂区一楼车床加工线AB",
+            children: "和泰机电益农厂区二楼车床加工线",
         },
         {
             key: "5",
             label: "线体状态",
-            children: <Badge status="processing" text="启用"/>,
+            children: <Badge status="processing" text={linearState}/>,
         },
     ];
-
     return (
         <Flex vertical={true}>
             <Flex vertical={true}>
-                <Descriptions title="销轴生产车床线实时监控" items={descriptionItems}/>
+                <Descriptions title="滚子套筒生产车床线实时监控" items={descriptionItems}/>
                 <Divider/>
                 <Row gutter={16}>
                     <Col span={6}>
@@ -313,22 +318,10 @@ const Links = () => {
                         <Spin indicator={<LoadingOutlined spin/>} size="large"/>
                     ) : (
                         mstatus.map((key) => {
-                            const mName = mCodeMapToName[String(key[0])];
+                            const mName = mCodeMapToName[String(key["id"])];
                             const actions = [
                                 <Popover
                                     content={
-                                        // <div>
-                                        //     <p>当前主加工程式名称: {key[3]}</p>
-                                        //     <p>加工总工件数: {key[4]}</p>
-                                        //     <p>系统实际的进给倍率: {key[5]}</p>
-                                        //     <p>系统主轴刀号: {key[6]}</p>
-                                        //     <p>是否加工暂停: {key[7] ? " 是 " : " 否 "}</p>
-                                        //     <p>系统实际的主轴转速: {key[8]}</p>
-                                        //     <p>系统主轴负载率: {key[9]}</p>
-                                        //     <p>主轴实际输出扭矩: {key[10]}</p>
-                                        //     <p>实际转速百分比: {key[11]}</p>
-                                        //     <p>系统警报: {key[12] ? "无报警" : key[12]}</p>
-                                        // </div>
                                         <div>
                                             <p>当前主加工程式名称: {key["actMainProgramName"]}</p>
                                             <p>加工总工件数: {key["TotalPartCount"]}</p>
@@ -353,7 +346,7 @@ const Links = () => {
                             return (
                                 <Card style={cardStyle} actions={actions} bordered={true}>
                                     <Card.Meta
-                                        key={key[0]}
+                                        key={key["id"]}
                                         title={mName}
                                         description={
                                             <>
@@ -372,4 +365,4 @@ const Links = () => {
     );
 };
 
-export default Links;
+export default L2Links;

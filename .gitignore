@@ -3,6 +3,8 @@
 frontend/node_modules
 frontend//.pnp
 frontend/.pnp.js
+.idea
+.venv
 
 # production
 frontend//build
