@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "api",
     "corsheaders",
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +135,22 @@ REST_FRAMEWORK = {
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+# 使用 Redis 作为 broker 和结果后端
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+# 设置时区和序列化方式
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Shanghai'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+
+# CELERYBEAT_SCHEDULE = {
+#     'EVERY_20_SECONDS': {
+#         'task': 'api.tasks.monitor_l1',
+#         'schedule': timedelta(seconds=20),
+#     }
+# }

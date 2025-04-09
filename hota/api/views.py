@@ -1,8 +1,9 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from datetime import datetime
 from rest_framework import status
-from .models import User
-from .serializer import UserSerializer
+from .models import User,CNCMachine,MachineRealtimeStatus
+from .serializer import UserSerializer,CNCMachineSerializer,MachineRealtimeStatusSerializer
 
 from asyncua.sync import Client
 from concurrent.futures import ThreadPoolExecutor
@@ -12,14 +13,14 @@ def fetch_machine_data(key, url):
     """获取单台机器数据"""
     status = "未知"
     actMainProgramName = "未知"
-    TotalPartCount = "未知"
+    TotalPartCount = -1
     ActFeedrate = "未知"
     ToolId = "未知"
-    FeedHold = "未知"
-    ActSpeed = "未知"
-    ActLoad = "未知"
-    ActTorque = "未知"
-    ActOverride = "未知"
+    FeedHold = 0
+    ActSpeed = 0
+    ActLoad = 0
+    ActTorque = 0
+    ActOverride = 0
     CurrentAlarm = "未知"
 
     try:
@@ -54,6 +55,35 @@ def fetch_machine_data(key, url):
                 pass
     except Exception as e:
         status = "连接失败"
+
+    """记录写入数据库"""
+    now = datetime.now()
+    timestamp = datetime.timestamp(now)
+    
+    record = {
+        "machine": key,
+        "timestamp": timestamp,
+        "ActProgramStatus0": status,
+        "actMainProgramName": actMainProgramName,
+        "TotalPartCount": int(TotalPartCount),
+        "CmdFeedrate": ActFeedrate,
+        "ToolId": ToolId,
+        "FeedHold": FeedHold,
+        "ActSpeed": ActSpeed,
+        "ActLoad": ActLoad,
+        "ActTorque": ActTorque,
+        "ActOverride": ActOverride,
+        "CurrentAlarm": CurrentAlarm,
+    }
+    
+    serializer = MachineRealtimeStatusSerializer(data=record)
+    print(record)
+    if serializer.is_valid():
+            serializer.save()
+    else:
+        print("储存出错：")
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     return {
         "id": key,
@@ -97,6 +127,32 @@ def get_l2_machine_status(request):
         74: "opc.tcp://192.168.31.74:4840",
         75: "opc.tcp://192.168.31.75:4840",
         76: "opc.tcp://192.168.31.76:4840",
+    }
+
+    # 使用线程池并行执行
+    with ThreadPoolExecutor(max_workers=len(machine_ip_map)) as executor:
+        # 提交所有任务
+        futures = [executor.submit(fetch_machine_data, key, url) for key, url in machine_ip_map.items()]
+        # 按原始顺序获取结果
+        res = [future.result() for future in futures]
+
+    return Response(res)
+
+@api_view(['GET'])
+def get_l1_machine_status(request):
+    machine_ip_map = {
+        22: "opc.tcp://192.168.31.22:4840",
+        21: "opc.tcp://192.168.31.21:4840",
+        20: "opc.tcp://192.168.31.20:4840",
+        19: "opc.tcp://192.168.31.19:4840",
+        18: "opc.tcp://192.168.31.18:4840",
+        17: "opc.tcp://192.168.31.17:4840",
+        28: "opc.tcp://192.168.31.28:4840",
+        27: "opc.tcp://192.168.31.27:4840",
+        26: "opc.tcp://192.168.31.26:4840",
+        25: "opc.tcp://192.168.31.25:4840",
+        24: "opc.tcp://192.168.31.24:4840",
+        23: "opc.tcp://192.168.31.23:4840",
     }
 
     # 使用线程池并行执行
@@ -268,3 +324,71 @@ def create_user(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def create_CNCMachine(request):
+    serializer = CNCMachineSerializer(data=request.data)
+    print(request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(['POST'])
+def create_CNCMachine_batch(request):
+    res_list = []
+    for each in request.data:
+        serializer = CNCMachineSerializer(data=each)
+        if serializer.is_valid():
+            serializer.save()
+            res_list.append(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(res_list, status=status.HTTP_201_CREATED)
+
+
+
+
+@api_view(['GET'])
+def get_CNCMachine(request):
+    serializer = CNCMachineSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_MachineRealtimeStatus(request):
+    machineRealtimeStatus = MachineRealtimeStatus.objects.all()
+    serializer = MachineRealtimeStatusSerializer(machineRealtimeStatus, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def get_CNCMachine(request, machine_id):
+    try:
+        cncMachine = CNCMachine.objects.get(pk=machine_id)
+    except CNCMachine.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    serializer = CNCMachineSerializer(cncMachine)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_all_CNCMachine(request):
+    cncMachine = CNCMachine.objects.all()
+    serializer = CNCMachineSerializer(cncMachine, many=True)
+    return Response(serializer.data)
+    
+# 测试用数据
+# {
+# "machine_id": "1",
+# "machine_name": "车削中心",
+# "model": "BC20P",
+# "workshop": "销轴线",
+# "ip_address": "192.168.31.22",
+# "is_online": 1
+# }
